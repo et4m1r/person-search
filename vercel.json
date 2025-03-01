@@ -3,5 +3,11 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install -f",
   "framework": "nextjs",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ]
 }
