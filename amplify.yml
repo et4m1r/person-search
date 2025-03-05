@@ -1,0 +1,19 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - npm ci --cache .npm --prefer-offline --legacy-peer-deps
+        - npx prisma generate # Generates the Prisma Client based on your schema
+    build:
+      commands:
+        - echo "DATABASE_URL=$DATABASE_URL" >> .env.production # Make DATABASE_URL available to Prisma
+        - NODE_ENV=production npx next build # Build the Next.js application in production mode
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .npm
