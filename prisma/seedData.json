@@ -1,0 +1,52 @@
+[
+  {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phoneNumber": "0412345678"
+  },
+  {
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "phoneNumber": "0423456789"
+  },
+  {
+    "name": "Alice Johnson",
+    "email": "alice.johnson@example.com",
+    "phoneNumber": "0434567890"
+  },
+  {
+    "name": "Bob Brown",
+    "email": "bob.brown@example.com",
+    "phoneNumber": "0445678901"
+  },
+  {
+    "name": "Charlie Davis",
+    "email": "charlie.davis@example.com",
+    "phoneNumber": "0456789012"
+  },
+  {
+    "name": "Emily Wilson",
+    "email": "emily.wilson@example.com",
+    "phoneNumber": "0467890123"
+  },
+  {
+    "name": "Frank Thomas",
+    "email": "frank.thomas@example.com",
+    "phoneNumber": "0478901234"
+  },
+  {
+    "name": "Grace White",
+    "email": "grace.white@example.com",
+    "phoneNumber": "0489012345"
+  },
+  {
+    "name": "Henry Green",
+    "email": "henry.green@example.com",
+    "phoneNumber": "0490123456"
+  },
+  {
+    "name": "Ivy Black",
+    "email": "ivy.black@example.com",
+    "phoneNumber": "0401234567"
+  }
+]

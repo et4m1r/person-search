@@ -65,11 +65,18 @@ The application has been tested with **Node.js 20.17.0**. Features such as ECMAS
 npm run dev
 ```
 
+### Run the Seed Script
+
+```bash
+npx prisma db seed
+```
+
 ## How It Works (Next.js 15.1 & React 19)
 
 ### Key Changes in `UserSearch` Component
 
 1. **Server Component Design**:
+
    - The `user-search` component is now a **Server Component**, leveraging `searchParams` and fetching user details server-side.
    - `searchParams` are asynchronous in Next.js 15.1, so the `user-search` component resolves them before rendering.
 
@@ -82,25 +89,24 @@ npm run dev
      return (
        <div className="space-y-6">
          <SearchInput />
-         {selectedUserId && (
-           <Suspense fallback={<p>Loading user...</p>}>
-             {user ? <UserCard user={user} /> : <p>User not found</p>}
-           </Suspense>
-         )}
+         {selectedUserId && <Suspense fallback={<p>Loading user...</p>}>{user ? <UserCard user={user} /> : <p>User not found</p>}</Suspense>}
        </div>
      );
    }
    ```
 
 2. **Improved Performance**:
+
    - Data fetching has been optimized to avoid redundant calls. The user object is fetched once in `user-search` and passed as a prop to child components like `UserCard` and `DeleteButton`.
    - This eliminates multiple fetches, improving performance and reducing server load.
 
 3. **Interaction with `SearchInput`**:
+
    - `SearchInput` remains a **Client Component**, responsible for interacting with the user through `react-select`'s `AsyncSelect`.
    - When a user is selected, the URL is updated with the user's ID using `window.history.pushState`. This triggers a re-render of `user-search` to reflect the updated state.
 
 4. **Improved Error Handling**:
+
    - Validations and controlled/uncontrolled input warnings have been resolved by ensuring consistent handling in forms using React Hook Form and Zod.
 
 5. **Concurrency & Hydration**:
@@ -109,9 +115,11 @@ npm run dev
 ### Known Issues
 
 1. **Toast Messages**:
+
    - Notifications in `DeleteButton` and `MutableDialog` are currently not showing. This requires debugging the integration of the `Sonner` toast library.
 
 2. **Theme Support**:
+
    - The `theme-provider` for managing dark and light modes has been removed temporarily. The Tailwind stylesheets need to be updated to align with the new Next.js configuration.
 
 3. **Hydration Warnings**:
@@ -150,6 +158,7 @@ The `MutableDialog` component is a reusable dialog framework that can be used fo
 #### How `MutableDialog` Works
 
 `MutableDialog` accepts the following props:
+
 - **`formSchema`**: A Zod schema defining the validation rules for the form.
 - **`FormComponent`**: A React component responsible for rendering the form fields.
 - **`action`**: A function to handle the form submission (e.g., adding or updating a user).
@@ -164,10 +173,10 @@ The `MutableDialog` component is a reusable dialog framework that can be used fo
 To use `MutableDialog` for adding a new user:
 
 ```tsx
-import { MutableDialog } from './components/mutable-dialog';
-import { userFormSchema, UserFormData } from './actions/schemas';
-import { addUser } from './actions/actions';
-import { UserForm } from './components/user-form';
+import { MutableDialog } from "./components/mutable-dialog";
+import { userFormSchema, UserFormData } from "./actions/schemas";
+import { addUser } from "./actions/actions";
+import { UserForm } from "./components/user-form";
 
 export function UserAddDialog() {
   const handleAddUser = async (data: UserFormData) => {
@@ -181,7 +190,7 @@ export function UserAddDialog() {
     } catch (error) {
       return {
         success: false,
-        message: `Failed to add user: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message: `Failed to add user: ${error instanceof Error ? error.message : "Unknown error"}`,
       };
     }
   };
@@ -205,10 +214,10 @@ export function UserAddDialog() {
 To use `MutableDialog` for editing an existing user:
 
 ```tsx
-import { MutableDialog } from './components/mutable-dialog';
-import { userFormSchema, UserFormData } from './actions/schemas';
-import { updateUser } from './actions/actions';
-import { UserForm } from './components/user-form';
+import { MutableDialog } from "./components/mutable-dialog";
+import { userFormSchema, UserFormData } from "./actions/schemas";
+import { updateUser } from "./actions/actions";
+import { UserForm } from "./components/user-form";
 
 export function UserEditDialog({ user }: { user: UserFormData }) {
   const handleUpdateUser = async (data: UserFormData) => {
@@ -222,7 +231,7 @@ export function UserEditDialog({ user }: { user: UserFormData }) {
     } catch (error) {
       return {
         success: false,
-        message: `Failed to update user: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message: `Failed to update user: ${error instanceof Error ? error.message : "Unknown error"}`,
       };
     }
   };
@@ -244,9 +253,10 @@ export function UserEditDialog({ user }: { user: UserFormData }) {
 
 ### Note: Future Refactoring for `ActionState` with React 19
 
-The `MutableDialog` component currently uses a custom `ActionState` type to handle the result of form submissions. However, React 19 introduces built-in support for `ActionState` in Server Actions, which can simplify this implementation. 
+The `MutableDialog` component currently uses a custom `ActionState` type to handle the result of form submissions. However, React 19 introduces built-in support for `ActionState` in Server Actions, which can simplify this implementation.
 
 #### Improvements to Make:
+
 - Replace the custom `ActionState` interface with React 19's built-in `ActionState`.
 - Use the `ActionState` directly within the form submission logic to align with React 19 best practices.
 - Refactor error handling and success notifications to leverage React's server-side error handling.
@@ -270,5 +280,4 @@ This project is open source and available under the [MIT License](LICENSE).
 ## Contact
 
 Callum Bir - [@callumbir](https://twitter.com/callumbir)  
-Project Link: [https://github.com/gocallum/person-search](https://github.com/gocallum/person-search)  
-
+Project Link: [https://github.com/gocallum/person-search](https://github.com/gocallum/person-search)
