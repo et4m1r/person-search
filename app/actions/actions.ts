@@ -1,8 +1,8 @@
-'use server';
+"use server";
 
-import { PrismaClient, User as PrismaUser } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
-import { User, userSchema } from './schemas';
+import { PrismaClient, User as PrismaUser } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { User, userSchema } from "./schemas";
 
 const prisma = new PrismaClient();
 
@@ -10,95 +10,110 @@ const prisma = new PrismaClient();
  * Maps a Prisma User object to a Zod User object.
  */
 const mapPrismaUserToZodUser = (prismaUser: PrismaUser): User => {
-    return userSchema.parse({
-        id: prismaUser.id,
-        name: prismaUser.name,
-        email: prismaUser.email,
-        phoneNumber: prismaUser.phoneNumber,
-    });
+  return userSchema.parse({
+    id: prismaUser.id,
+    name: prismaUser.name,
+    email: prismaUser.email,
+    phoneNumber: prismaUser.phoneNumber,
+  });
 };
 
 /**
  * Search users by name prefix.
  */
 export async function searchUsers(query: string): Promise<User[]> {
+  const trimmedQuery = query.trim();
+  if (!trimmedQuery) {
+    console.log("Query is empty after trimming. Returning no results.");
+    return [];
+  }
 
-    const trimmedQuery = query.trim();
-    if (!trimmedQuery) {
-        console.log('Query is empty after trimming. Returning no results.');
-        return [];
-    }
+  console.log("Searching users with query:", query);
+  const prismaUsers = await prisma.user.findMany({
+    where: {
+      name: {
+        startsWith: trimmedQuery,
+        mode: "insensitive", // Case-insensitive search
+      },
+    },
+  });
 
-    console.log('Searching users with query:', query);
-    const prismaUsers = await prisma.user.findMany({
-        where: {
-            name: {
-                startsWith: trimmedQuery,
-                mode: 'insensitive', // Case-insensitive search
-            },
-        },
-    });
+  return prismaUsers.map(mapPrismaUserToZodUser);
+}
 
-    return prismaUsers.map(mapPrismaUserToZodUser);
+/**
+ * List alls users.
+ */
+export async function listUsers(query: string = "", page: number = 1, pageSize: number = 9): Promise<{ users: User[]; total: number }> {
+  const trimmedQuery = query.trim();
+  let searchCondition = {};
+  if (trimmedQuery) {
+    searchCondition = { name: { startsWith: trimmedQuery, mode: "insensitive" } };
+  }
+
+  const [prismaUsers, total] = await Promise.all([
+    prisma.user.findMany({
+      where: searchCondition,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.user.count({ where: searchCondition }),
+  ]);
+
+  return { users: prismaUsers.map(mapPrismaUserToZodUser), total };
 }
 
 /**
  * Add a new user.
  */
-export async function addUser(data: Omit<User, 'id'>): Promise<User> {
-    // Validate input data
-    const validatedData = userSchema.omit({ id: true }).parse(data);
+export async function addUser(data: Omit<User, "id">): Promise<User> {
+  // Validate input data
+  const validatedData = userSchema.omit({ id: true }).parse(data);
 
-    const prismaUser = await prisma.user.create({
-        data: validatedData,
-    });
+  const prismaUser = await prisma.user.create({
+    data: validatedData,
+  });
 
-    return mapPrismaUserToZodUser(prismaUser);
+  return mapPrismaUserToZodUser(prismaUser);
 }
 
 /**
  * Delete a user by ID.
  */
 export async function deleteUser(id: string): Promise<void> {
-    const existingUser = await prisma.user.findUnique({ where: { id } });
-    if (!existingUser) {
-        throw new Error(`User with id ${id} not found`);
-    }
+  const existingUser = await prisma.user.findUnique({ where: { id } });
+  if (!existingUser) {
+    throw new Error(`User with id ${id} not found`);
+  }
 
-    await prisma.user.delete({ where: { id } });
-    console.log(`User with id ${id} has been deleted.`);
-    revalidatePath('/');
+  await prisma.user.delete({ where: { id } });
+  console.log(`User with id ${id} has been deleted.`);
+  revalidatePath("/");
 }
 
 /**
  * Update an existing user.
  */
-export async function updateUser(
-    id: string,
-    data: Partial<Omit<User, 'id'>>
-): Promise<User> {
-    // Validate partial input data
-    const validatedData = userSchema
-        .omit({ id: true })
-        .partial()
-        .parse(data);
+export async function updateUser(id: string, data: Partial<Omit<User, "id">>): Promise<User> {
+  // Validate partial input data
+  const validatedData = userSchema.omit({ id: true }).partial().parse(data);
 
-    const prismaUser = await prisma.user.update({
-        where: { id },
-        data: validatedData,
-    });
+  const prismaUser = await prisma.user.update({
+    where: { id },
+    data: validatedData,
+  });
 
-    console.log(`User with id ${id} has been updated.`);
-    revalidatePath('/');
+  console.log(`User with id ${id} has been updated.`);
+  revalidatePath("/");
 
-    return mapPrismaUserToZodUser(prismaUser);
+  return mapPrismaUserToZodUser(prismaUser);
 }
 
 /**
  * Get a user by ID.
  */
 export async function getUserById(id: string): Promise<User | null> {
-    const prismaUser = await prisma.user.findUnique({ where: { id } });
+  const prismaUser = await prisma.user.findUnique({ where: { id } });
 
-    return prismaUser ? mapPrismaUserToZodUser(prismaUser) : null;
+  return prismaUser ? mapPrismaUserToZodUser(prismaUser) : null;
 }

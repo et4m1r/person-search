@@ -26,6 +26,9 @@ export default function Navbar() {
             <Link href="/" className="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Home
             </Link>
+            <Link href="/list" className="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+              User list
+            </Link>
             <Link href="/about" className="text-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               About
             </Link>
