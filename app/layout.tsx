@@ -4,7 +4,7 @@ import Footer from "./components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
-
+import { GoogleAnalytics } from "@next/third-parties/google";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Toaster />
             <Footer />
           </ThemeProvider>
+          {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && process.env.NODE_ENV === "production" && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />}
         </body>
       </html>
     </SessionProvider>
