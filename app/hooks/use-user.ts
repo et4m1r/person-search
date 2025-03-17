@@ -1,38 +1,37 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { getUserById } from '@/app/actions/actions'
-import { User } from '@/app/actions/schemas'
+import { useState, useEffect } from "react";
+import { getUserById } from "@/app/(main)/actions/actions";
+import { User } from "@/app/(main)/actions/schemas";
 
 export function useUser(userId: string | null) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (userId) {
-      getUserById(userId).then(fetchedUser => {
+      getUserById(userId).then((fetchedUser) => {
         if (fetchedUser) {
-          setUser(fetchedUser)
+          setUser(fetchedUser);
         } else {
-          setUser(null)
+          setUser(null);
         }
-      })
+      });
     } else {
-      setUser(null)
+      setUser(null);
     }
-  }, [userId])
+  }, [userId]);
 
   const mutate = () => {
     if (userId) {
-      getUserById(userId).then(fetchedUser => {
+      getUserById(userId).then((fetchedUser) => {
         if (fetchedUser) {
-          setUser(fetchedUser)
+          setUser(fetchedUser);
         } else {
-          setUser(null)
+          setUser(null);
         }
-      })
+      });
     }
-  }
+  };
 
-  return { user, mutate }
+  return { user, mutate };
 }
-

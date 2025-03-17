@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
-import SearchInput from './search-input-cmd';
-import UserCard from './user-card';
-import { getUserById } from '@/app/actions/actions';
+import { Suspense } from "react";
+import SearchInput from "./search-input-cmd";
+import UserCard from "./user-card";
+import { getUserById } from "@/app/(main)/actions/actions";
 
 export default async function UserSearch({ searchParams }: { searchParams: Promise<{ userId?: string }> }) {
   // Resolve the searchParams asynchronously
@@ -14,11 +14,7 @@ export default async function UserSearch({ searchParams }: { searchParams: Promi
   return (
     <div className="space-y-6">
       <SearchInput />
-      {selectedUserId && (
-        <Suspense fallback={<p>Loading user...</p>}>
-          {user ? <UserCard user={user} /> : null}
-        </Suspense>
-      )}
+      {selectedUserId && <Suspense fallback={<p>Loading user...</p>}>{user ? <UserCard user={user} /> : null}</Suspense>}
     </div>
   );
 }

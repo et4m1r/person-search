@@ -1,12 +1,9 @@
-import type { Metadata } from "next";
 import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
-import "./globals.css";
-import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
-import { auth } from "@/auth";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,22 +15,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Person Search App",
   description: "A simple search app to find people by name",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth.auth();
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <html lang="en" suppressHydrationWarning={true}>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            {session ? <Navbar /> : null}
-            <main className="flex-grow">{children}</main>
+            {children}
             <Toaster />
-
             <Footer />
           </ThemeProvider>
         </body>

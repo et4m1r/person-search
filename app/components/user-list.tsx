@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { listUsers, deleteUser } from "@/app/actions/actions";
-import { User } from "@/app/actions/schemas";
+import { listUsers, deleteUser } from "@/app/(main)/actions/actions";
+import { User } from "@/app/(main)/actions/schemas";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "./pagination";
 import { UserEditDialog } from "./user-edit-dialog";

@@ -1,30 +1,30 @@
-'use client'
+"use client";
 
-import { updateUser } from '@/app/actions/actions'
-import { userFormSchema, User, UserFormData } from '@/app/actions/schemas'
-import { UserForm } from './user-form'
-import MutableDialog, { ActionState } from '@/components/mutable-dialog'
+import { updateUser } from "@/app/(main)/actions/actions";
+import { userFormSchema, User, UserFormData } from "@/app/(main)/actions/schemas";
+import { UserForm } from "./user-form";
+import MutableDialog, { ActionState } from "@/components/mutable-dialog";
 
 interface UserEditDialogProps {
-  user: User
+  user: User;
 }
 
 export function UserEditDialog({ user }: UserEditDialogProps) {
   const handleEditUser = async (data: UserFormData): Promise<ActionState<User>> => {
     try {
-      const updatedUser = await updateUser(user.id, data)
+      const updatedUser = await updateUser(user.id, data);
       return {
         success: true,
         message: `User ${updatedUser.name} updated successfully`,
         data: updatedUser,
-      }
+      };
     } catch (error) {
       return {
         success: false,
-        message: 'Failed to update user' + (error instanceof Error ? error.message : String(error)),
-      }
+        message: "Failed to update user" + (error instanceof Error ? error.message : String(error)),
+      };
     }
-  }
+  };
 
   return (
     <MutableDialog<UserFormData>
@@ -41,5 +41,5 @@ export function UserEditDialog({ user }: UserEditDialogProps) {
         phoneNumber: user.phoneNumber,
       }}
     />
-  )
+  );
 }

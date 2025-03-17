@@ -8,6 +8,20 @@ export const auth = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.image = token.picture;
+      }
+      return session;
+    },
+    async jwt({ token, account, profile }) {
+      if (account) {
+        token.picture = profile?.picture;
+      }
+      return token;
+    },
+  },
 });
 
 export const { handlers, signIn, signOut } = auth;
