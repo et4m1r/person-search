@@ -5,8 +5,17 @@ import { GalleryVerticalEnd } from "lucide-react";
 import { Home, List, Contact } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { useSession } from "next-auth/react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { useSession, useContext } from "next-auth/react";
 
 // This is sample data.
 const data = {
@@ -37,7 +46,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const userData = {
     name: user?.name || "Guest",
     email: user?.email || "guest@example.com",
-    avatar: user?.image || "/avatars/shadcn.jpg",
+    avatar: user?.imag || "/avatars/shadcn.jpg",
   };
   return (
     <Sidebar className="border-r-0" {...props}>
